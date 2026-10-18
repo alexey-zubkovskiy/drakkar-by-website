@@ -186,11 +186,18 @@ section{position:relative}
 
 /* ---------- gear ---------- */
 .gear{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.gear .card{padding:34px;min-height:340px;display:flex;flex-direction:column}
-.gear .card .illu{height:130px;margin:-6px -6px 22px;display:grid;place-items:center}
-.gear .card .illu svg{height:100%;width:auto;transition:transform .7s var(--ease)}
-.gear .card:hover .illu svg{transform:translateY(-8px) rotate(-4deg) scale(1.05)}
+.gear .card{padding:0;min-height:0;display:flex;flex-direction:column;isolation:isolate}
+.gear .photo{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--forest)}
+.gear .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,20,15,0) 55%,rgba(8,20,15,.75));pointer-events:none}
+.gear .photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);transition:transform 1.2s var(--ease),filter .6s;filter:saturate(.95)}
+.gear .card:hover .photo img{transform:scale(1.12);filter:saturate(1.1)}
+.gear .chip{position:absolute;left:18px;top:18px;z-index:1;padding:6px 12px;border-radius:999px;background:rgba(8,20,15,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(244,236,216,.25);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.gear .body{padding:26px 30px 28px;display:flex;flex-direction:column;flex:1}
+.gear .credit{margin-top:auto;padding-top:16px;font-size:12px;color:rgba(244,236,216,.4);transition:color .3s}
+.gear .credit:hover{color:var(--aqua)}
 .gear .card h3{font-size:26px;margin:0 0 10px}
+@media (max-width:980px) and (min-width:561px){.gear .photo{aspect-ratio:16/9}}
 
 /* ---------- camp ---------- */
 .camp{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
@@ -545,19 +552,28 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
     </div>
     <div class="gear">
       <article class="card tilt reveal" style="--d:0s">
-        <div class="illu"><svg viewBox="0 0 200 120"><path d="M10 70 C60 95 140 95 190 70 C150 82 50 82 10 70Z" fill="#f2a541"/><path d="M10 70 C60 58 140 58 190 70" stroke="#c97d22" stroke-width="3" fill="none"/><ellipse cx="80" cy="70" rx="14" ry="5" fill="#08140f"/><ellipse cx="125" cy="70" rx="14" ry="5" fill="#08140f"/><g stroke="#f4ecd8" stroke-width="4" stroke-linecap="round"><line x1="40" y1="30" x2="160" y2="105"/></g><ellipse cx="36" cy="27" rx="10" ry="5" fill="#56d4c3" transform="rotate(32 36 27)"/><ellipse cx="164" cy="108" rx="10" ry="5" fill="#56d4c3" transform="rotate(32 164 108)"/></svg></div>
-        <h3>Байдарки</h3>
-        <p>Устойчивые и вместительные — для пар, семей и компаний друзей.</p>
+        <figure class="photo"><img src="https://images.unsplash.com/photo-1653593548856-23fdff295e2d?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1653593548856-23fdff295e2d?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1653593548856-23fdff295e2d?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1653593548856-23fdff295e2d?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=1200&amp;h=900 1200w" sizes="(max-width:980px) 100vw, 33vw" alt="Двое в пластиковой двухместной байдарке на лесном озере" loading="lazy" decoding="async" width="800" height="600"><span class="chip">2–3 места</span></figure>
+        <div class="body">
+          <h3>Байдарки</h3>
+          <p>Пластиковые двух- и трёхместные байдарки: устойчивые и прочные — для пар, семей и компаний друзей.</p>
+          <a class="credit" href="https://unsplash.com/photos/wbqy_-475tw" target="_blank" rel="noopener">Фото: Serhii Danevych / Unsplash</a>
+        </div>
       </article>
       <article class="card tilt reveal" style="--d:.12s">
-        <div class="illu"><svg viewBox="0 0 200 120"><path d="M20 80 C20 66 180 66 186 78 C180 90 20 94 20 80Z" fill="#56d4c3"/><path d="M40 80 H160" stroke="#08140f" stroke-width="2" stroke-dasharray="6 6"/><line x1="120" y1="12" x2="96" y2="96" stroke="#f4ecd8" stroke-width="4" stroke-linecap="round"/><path d="M92 92 l-4 18 l12 -14z" fill="#f2a541"/><circle cx="100" cy="30" r="8" fill="#f2a541"/><path d="M100 40 L100 70 M100 48 L118 30 M100 70 L90 80 M100 70 L112 80" stroke="#f2a541" stroke-width="5" stroke-linecap="round"/></svg></div>
-        <h3>Сапборды</h3>
-        <p>Для тех, кто хочет стоять над водой и смотреть на реку по-новому.</p>
+        <figure class="photo"><img src="https://images.unsplash.com/photo-1791488154247-a05504d1c7c5?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1791488154247-a05504d1c7c5?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1791488154247-a05504d1c7c5?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1791488154247-a05504d1c7c5?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=1200&amp;h=900 1200w" sizes="(max-width:980px) 100vw, 33vw" alt="Человек на сапборде на спокойной зелёной реке" loading="lazy" decoding="async" width="800" height="600"><span class="chip">SUP</span></figure>
+        <div class="body">
+          <h3>Сапборды</h3>
+          <p>Для тех, кто хочет стоять над водой и смотреть на реку по-новому.</p>
+          <a class="credit" href="https://unsplash.com/photos/nBT80AO3EVQ" target="_blank" rel="noopener">Фото: Annie Spratt / Unsplash</a>
+        </div>
       </article>
       <article class="card tilt reveal" style="--d:.24s">
-        <div class="illu"><svg viewBox="0 0 200 120"><path d="M30 100 L100 22 L170 100Z" fill="#c4452f"/><path d="M100 22 L130 100 H70Z" fill="#8a2e1f"/><path d="M100 50 L114 100 H86Z" fill="#08140f"/><line x1="10" y1="100" x2="190" y2="100" stroke="#f4ecd8" stroke-width="3" stroke-linecap="round"/><g fill="#f2a541"><circle cx="40" cy="30" r="2"/><circle cx="160" cy="20" r="2.5"/><circle cx="175" cy="50" r="1.6"/></g></svg></div>
-        <h3>Палатки</h3>
-        <p>Для ночёвки в формате «2 реки за 2 дня» или вашего собственного похода.</p>
+        <figure class="photo"><img src="https://images.unsplash.com/photo-1593969420971-8996bd474ce9?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=800&amp;h=600" srcset="https://images.unsplash.com/photo-1593969420971-8996bd474ce9?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=480&amp;h=360 480w, https://images.unsplash.com/photo-1593969420971-8996bd474ce9?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=800&amp;h=600 800w, https://images.unsplash.com/photo-1593969420971-8996bd474ce9?auto=format&amp;fit=crop&amp;crop=entropy&amp;q=75&amp;w=1200&amp;h=900 1200w" sizes="(max-width:980px) 100vw, 33vw" alt="Палатка у воды в сосновом лесу" loading="lazy" decoding="async" width="800" height="600"><span class="chip">Ночёвка</span></figure>
+        <div class="body">
+          <h3>Палатки</h3>
+          <p>Для ночёвки в формате «2 реки за 2 дня» или вашего собственного похода.</p>
+          <a class="credit" href="https://unsplash.com/photos/M4qmHs-o4Xg" target="_blank" rel="noopener">Фото: Ignat Kushnarev / Unsplash</a>
+        </div>
       </article>
     </div>
   </div>
