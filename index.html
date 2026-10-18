@@ -27,15 +27,18 @@
   --ease:cubic-bezier(.22,1,.36,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
 html,body{overflow-x:hidden;overflow-x:clip}
 body{background:var(--night);color:var(--cream);font-family:Manrope,system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img,svg{display:block}
-h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;line-height:1.08;letter-spacing:-.02em}
+h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;line-height:1.08;letter-spacing:-.02em;text-wrap:balance}
+p{text-wrap:pretty}
 .wrap{width:min(1200px,100% - 32px);margin-inline:auto}
 section{position:relative}
 ::selection{background:var(--amber);color:var(--night)}
+:focus-visible{outline:2px solid var(--aqua);outline-offset:3px;border-radius:10px}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:none}
 
 /* ---------- cursor glow ---------- */
 .glow{position:fixed;left:0;top:0;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:1;
@@ -95,11 +98,11 @@ section{position:relative}
 @keyframes sail{0%{transform:translateX(-30vw)}100%{transform:translateX(110vw)}}
 #fireflies{position:absolute;inset:0;width:100%;height:100%}
 
-.hero-inner{position:relative;z-index:2;padding:120px 0 160px}
+.hero-inner{position:relative;z-index:2;padding:clamp(96px,15vh,120px) 0 clamp(120px,20vh,160px)}
 .tag{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 10px;border-radius:999px;background:var(--glass);border:1px solid var(--line);
   backdrop-filter:blur(10px);font-size:14px;font-weight:600}
 .tag b{background:var(--amber);color:var(--night);border-radius:999px;padding:2px 10px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-.hero h1{font-size:clamp(42px,7.4vw,104px);font-weight:800;margin:26px 0 22px;max-width:12ch}
+.hero h1{font-size:clamp(40px,min(7.4vw,11.5vh),104px);font-weight:800;margin:26px 0 22px;max-width:12ch}
 .hero h1 .accent{background:linear-gradient(100deg,var(--amber),#ffd9a0 50%,var(--aqua));-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p.lead{font-size:clamp(17px,1.6vw,20px);color:var(--mist);max-width:520px;margin-bottom:36px}
 .hero .ctas{display:flex;flex-wrap:wrap;gap:14px}
@@ -122,12 +125,13 @@ section{position:relative}
 @keyframes marq{to{transform:translateX(-50%)}}
 
 /* ---------- generic section ---------- */
-.sec{padding:clamp(80px,12vw,150px) 0}
+.sec{padding:clamp(72px,9vw,120px) 0}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--aqua);font-weight:700;font-size:13px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px}
 .eyebrow::before{content:"";width:28px;height:2px;background:currentColor}
 .sec h2{font-size:clamp(32px,4.6vw,62px);font-weight:800;max-width:16ch}
 .sec .sub{color:var(--mist);max-width:560px;margin-top:18px;font-size:18px}
-.head{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap;margin-bottom:56px}
+.head{display:grid;grid-template-columns:1.25fr 1fr;align-items:end;gap:24px 60px;margin-bottom:56px}
+.head .sub{margin-top:0;justify-self:end}
 
 .reveal{opacity:0;transform:translateY(46px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--d,0s)}
 .reveal.in{opacity:1;transform:none}
@@ -158,10 +162,13 @@ section{position:relative}
 .card .ico{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:rgba(86,212,195,.12);color:var(--aqua)}
 .card .ico svg{width:34px;height:34px}
 .card.big{grid-row:span 2;min-height:560px;display:flex;flex-direction:column;justify-content:flex-end}
-.card.big .art{position:absolute;inset:0;z-index:-1;opacity:.9}
-.card.big .art svg{width:100%;height:100%}
+.card.big .art{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--forest)}
+.card.big .art img{width:100%;height:100%;object-fit:cover;object-position:50% 80%;transform:scale(1.04);transition:transform 1.4s var(--ease)}
+.card.big:hover .art img{transform:scale(1.1)}
+.card.big .credit{position:absolute;top:30px;left:38px;font-size:12px;color:rgba(244,236,216,.6);text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.card.big .credit:hover{color:var(--cream)}
 .card.big{isolation:isolate}
-.card.big::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(8,20,15,.95) 35%,rgba(8,20,15,.2))}
+.card.big::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(8,20,15,.96) 30%,rgba(8,20,15,.55) 58%,rgba(8,20,15,.05))}
 
 /* ---------- rivers ---------- */
 .rivers{display:grid;grid-template-columns:1fr 1.1fr;gap:60px;align-items:center}
@@ -208,8 +215,8 @@ section{position:relative}
 .amen h4{font:700 18px Manrope;margin-bottom:4px}
 .amen p{font-size:14px;color:var(--mist)}
 .amen.wide{grid-column:span 2;background:linear-gradient(120deg,rgba(224,102,47,.25),rgba(242,165,65,.08));border-color:rgba(242,165,65,.3);position:relative;overflow:hidden}
-.amen.wide .steam{position:absolute;right:30px;bottom:20px;display:flex;gap:10px}
-.amen.wide .steam i{width:10px;height:50px;border-radius:10px;background:linear-gradient(0deg,rgba(244,236,216,.35),transparent);animation:steam 3s ease-in-out infinite;filter:blur(3px)}
+.amen.wide .steam{position:absolute;right:40px;bottom:10px;display:flex;gap:14px;pointer-events:none}
+.amen.wide .steam i{width:26px;height:70px;border-radius:50%;background:radial-gradient(ellipse at 50% 70%,rgba(244,236,216,.22),transparent 70%);animation:steam 3.6s ease-in-out infinite;filter:blur(6px)}
 .amen.wide .steam i:nth-child(2){animation-delay:.6s}
 .amen.wide .steam i:nth-child(3){animation-delay:1.2s}
 @keyframes steam{0%{transform:translateY(20px) scaleY(.6);opacity:0}40%{opacity:1}100%{transform:translateY(-30px) scaleY(1.3);opacity:0}}
@@ -217,8 +224,8 @@ section{position:relative}
 
 /* ---------- steps ---------- */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;counter-reset:s}
-.steps::before{content:"";position:absolute;top:30px;left:30px;right:30px;height:2px;background:var(--line)}
-.steps .line{position:absolute;top:30px;left:30px;height:2px;width:calc(100% - 60px);background:linear-gradient(90deg,var(--aqua),var(--amber));transform-origin:left;transform:scaleX(0);transition:transform 1.8s var(--ease)}
+.steps::before{content:"";position:absolute;top:30px;left:30px;width:calc(75% + 18px);height:2px;background:var(--line)}
+.steps .line{position:absolute;top:30px;left:30px;height:2px;width:calc(75% + 18px);background:linear-gradient(90deg,var(--aqua),var(--amber));transform-origin:left;transform:scaleX(0);transition:transform 1.8s var(--ease)}
 .steps.in .line{transform:scaleX(1)}
 .step{position:relative;counter-increment:s}
 .step .dot{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:var(--night);border:2px solid var(--moss);font-family:Unbounded;font-weight:800;margin-bottom:24px;position:relative;z-index:1;transition:border-color .5s,background .5s}
@@ -272,7 +279,7 @@ form>p{color:var(--mist);margin-bottom:28px}
 @keyframes draw{to{stroke-dashoffset:0}}
 
 /* ---------- footer ---------- */
-footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
+footer{border-top:1px solid var(--line);padding:60px 0 110px;margin-top:0}
 .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
 .big-word{font-family:Unbounded;font-weight:800;font-size:clamp(60px,15vw,220px);line-height:.9;letter-spacing:-.04em;margin-bottom:40px;
   background:linear-gradient(180deg,rgba(244,236,216,.16),rgba(244,236,216,0));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -303,7 +310,11 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
   .nav.open .burger i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
   .stats{grid-template-columns:1fr 1fr}
   .routes,.rivers,.book{grid-template-columns:1fr}
-  .card.big{grid-row:auto;min-height:480px}
+  .head{grid-template-columns:1fr}
+  .head .sub{justify-self:start}
+  .card.big{grid-row:auto;min-height:0;padding-top:min(62vw,340px)}
+  .card.big::before{background:linear-gradient(0deg,rgba(8,20,15,.97) 50%,rgba(8,20,15,.5) 72%,rgba(8,20,15,0))}
+  .card.big .credit{top:auto;bottom:12px;left:auto;right:20px}
   .gear{grid-template-columns:1fr}
   .camp{grid-template-columns:1fr 1fr}
   .steps{grid-template-columns:1fr 1fr;row-gap:40px}
@@ -437,18 +448,8 @@ footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
 
     <div class="routes">
       <article class="card big tilt reveal-scale">
-        <div class="art" aria-hidden="true">
-          <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
-            <defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b4a3d"/><stop offset="1" stop-color="#0b1b16"/></linearGradient></defs>
-            <rect width="600" height="600" fill="url(#rg)"/>
-            <g fill="#0f2c24" opacity=".9">
-              <path d="M0 260 L40 140 L80 260Z M50 270 L100 110 L150 270Z M130 260 L170 150 L210 260Z M400 260 L450 120 L500 260Z M480 270 L530 90 L580 270Z M540 260 L580 160 L620 260Z"/>
-            </g>
-            <path class="flow" d="M-20 420 C120 340 220 470 330 400 S520 330 640 380" stroke="#56d4c3" stroke-width="40" fill="none" opacity=".25"/>
-            <path class="flow" d="M-20 420 C120 340 220 470 330 400 S520 330 640 380" stroke="#56d4c3" stroke-width="3" fill="none" stroke-dasharray="10 16"><animate attributeName="stroke-dashoffset" from="0" to="-260" dur="6s" repeatCount="indefinite"/></path>
-            <circle cx="260" cy="200" r="70" fill="#f2a541" opacity=".18"><animate attributeName="r" values="60;80;60" dur="6s" repeatCount="indefinite"/></circle>
-          </svg>
-        </div>
+        <div class="art"><img src="https://images.unsplash.com/photo-1698921403589-71013cdbfb19?auto=format&amp;fit=crop&amp;q=75&amp;w=900&amp;h=1000" srcset="https://images.unsplash.com/photo-1698921403589-71013cdbfb19?auto=format&amp;fit=crop&amp;q=75&amp;w=600&amp;h=700 600w, https://images.unsplash.com/photo-1698921403589-71013cdbfb19?auto=format&amp;fit=crop&amp;q=75&amp;w=900&amp;h=1000 900w, https://images.unsplash.com/photo-1698921403589-71013cdbfb19?auto=format&amp;fit=crop&amp;q=75&amp;w=1300&amp;h=1400 1300w" sizes="(max-width:980px) 100vw, 55vw" alt="Вид с байдарки на лесную реку под кронами деревьев" loading="lazy" decoding="async"></div>
+        <a class="credit" href="https://unsplash.com/photos/R1yQATAVBhg" target="_blank" rel="noopener">Фото: Anna Kulbashna / Unsplash</a>
         <span class="badge">Новинка сезона</span>
         <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 16c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0"/><path d="M2 20c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0"/><circle cx="12" cy="7" r="3"/></svg></div>
         <h3>2 реки за 1 день</h3>
