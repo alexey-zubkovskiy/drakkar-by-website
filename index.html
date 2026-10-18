@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drakkar.by — сплавы по Нарочанке и Спяглице</title>
+<meta name="description" content="Прокат байдарок, сапбордов и палаток. Сплавы «2 реки за 1 день» и «2 реки за 2 дня» по Нарочанке и Спяглице, 110 км от Минска.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#08140f;
+  --deep:#0d221c;
+  --forest:#143a2f;
+  --moss:#1f5444;
+  --water:#2a8f86;
+  --aqua:#56d4c3;
+  --amber:#f2a541;
+  --ember:#e0662f;
+  --sail:#c4452f;
+  --cream:#f4ecd8;
+  --mist:rgba(244,236,216,.66);
+  --line:rgba(244,236,216,.12);
+  --glass:rgba(13,34,28,.55);
+  --radius:22px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--night);color:var(--cream);font-family:Manrope,system-ui,sans-serif;font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;line-height:1.08;letter-spacing:-.02em}
+.wrap{width:min(1200px,100% - 32px);margin-inline:auto}
+section{position:relative}
+::selection{background:var(--amber);color:var(--night)}
+
+/* ---------- cursor glow ---------- */
+.glow{position:fixed;left:0;top:0;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(86,212,195,.13),transparent 65%);transform:translate(-999px,-999px);transition:opacity .4s;opacity:0}
+@media (hover:hover){body:hover .glow{opacity:1}}
+
+/* ---------- progress ---------- */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,var(--aqua),var(--amber));z-index:60}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
+.nav.scrolled{background:rgba(8,20,15,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:76px}
+.logo{display:flex;align-items:center;gap:10px;font-family:Unbounded;font-weight:800;font-size:20px;letter-spacing:.02em}
+.logo svg{width:38px;height:38px}
+.logo span{color:var(--amber)}
+.menu{display:flex;gap:30px;font-weight:600;font-size:15px}
+.menu a{position:relative;opacity:.8;transition:opacity .3s}
+.menu a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:100%;background:var(--amber);transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
+.menu a:hover{opacity:1}
+.menu a:hover::after{transform:scaleX(1);transform-origin:left}
+.burger{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:none;color:var(--cream);cursor:pointer}
+.burger i{display:block;width:18px;height:2px;background:currentColor;margin:4px auto;transition:transform .3s}
+
+.btn{--bg:var(--amber);position:relative;display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:999px;border:0;cursor:pointer;
+  background:var(--bg);color:var(--night);font:700 16px Manrope,sans-serif;overflow:hidden;isolation:isolate;transition:transform .35s var(--ease),box-shadow .35s}
+.btn::before{content:"";position:absolute;inset:0;background:var(--cream);transform:translateY(101%);transition:transform .45s var(--ease);z-index:-1;border-radius:inherit}
+.btn:hover::before{transform:none}
+.btn:hover{box-shadow:0 12px 40px -10px rgba(242,165,65,.6)}
+.btn.ghost{background:transparent;color:var(--cream);box-shadow:inset 0 0 0 1.5px rgba(244,236,216,.4)}
+.btn.ghost::before{background:rgba(244,236,216,.1)}
+.btn.small{padding:11px 20px;font-size:14px}
+.btn svg{width:18px;height:18px;transition:transform .35s var(--ease)}
+.btn:hover svg{transform:translateX(4px)}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;align-items:center;overflow:hidden;
+  background:linear-gradient(180deg,#0a1f1b 0%,#123a36 38%,#2f5a4a 58%,#c98a4a 78%,#e8a65a 86%,#0d221c 86.2%)}
+.scene{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;left:62%;top:52%;width:240px;height:240px;border-radius:50%;
+  background:radial-gradient(circle,#ffe2a8 0%,#f6b45c 40%,rgba(242,165,65,0) 70%);filter:blur(2px);animation:sun 8s ease-in-out infinite alternate}
+@keyframes sun{to{transform:translateY(14px) scale(1.06)}}
+.stars{position:absolute;inset:0 0 55% 0}
+.forest{position:absolute;left:-5%;width:110%;bottom:13%;will-change:transform}
+.forest svg{width:100%;height:auto}
+.waves{position:absolute;left:0;right:0;bottom:0;height:16%;overflow:hidden;background:linear-gradient(180deg,#1a4b45,#0d221c)}
+.wave{position:absolute;left:0;width:200%;height:100%;animation:wave linear infinite}
+.wave svg{width:100%;height:100%}
+.wave.w1{animation-duration:14s;opacity:.55;top:-4px}
+.wave.w2{animation-duration:9s;animation-direction:reverse;opacity:.5;top:18%}
+.wave.w3{animation-duration:6s;opacity:.9;top:40%}
+@keyframes wave{to{transform:translateX(-50%)}}
+.ship{position:absolute;left:12%;bottom:9%;width:min(300px,42vw);animation:sail 26s linear infinite}
+.ship svg{width:100%;animation:bob 3.4s ease-in-out infinite;transform-origin:50% 80%}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-8px) rotate(1.8deg)}}
+@keyframes sail{0%{transform:translateX(-30vw)}100%{transform:translateX(110vw)}}
+#fireflies{position:absolute;inset:0;width:100%;height:100%}
+
+.hero-inner{position:relative;z-index:2;padding:120px 0 160px}
+.tag{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 10px;border-radius:999px;background:var(--glass);border:1px solid var(--line);
+  backdrop-filter:blur(10px);font-size:14px;font-weight:600}
+.tag b{background:var(--amber);color:var(--night);border-radius:999px;padding:2px 10px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.hero h1{font-size:clamp(42px,7.4vw,104px);font-weight:800;margin:26px 0 22px;max-width:12ch}
+.hero h1 .accent{background:linear-gradient(100deg,var(--amber),#ffd9a0 50%,var(--aqua));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:clamp(17px,1.6vw,20px);color:var(--mist);max-width:520px;margin-bottom:36px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:14px}
+.hero .btn.ghost{background:rgba(8,20,15,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.split .ch{display:inline-block;transform:translateY(110%) rotate(6deg);opacity:0;animation:rise .9s var(--ease) forwards}
+.split .w{display:inline-block;overflow:hidden;padding-bottom:.08em;vertical-align:top}
+@keyframes rise{to{transform:none;opacity:1}}
+.fade-up{opacity:0;transform:translateY(24px);animation:fu 1s var(--ease) forwards}
+@keyframes fu{to{opacity:1;transform:none}}
+.scroll-hint{position:absolute;left:50%;bottom:26px;z-index:3;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--mist)}
+.scroll-hint i{width:24px;height:38px;border:1.5px solid var(--mist);border-radius:14px;position:relative}
+.scroll-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;border-radius:2px;background:var(--amber);transform:translateX(-50%);animation:wheel 1.8s infinite}
+@keyframes wheel{0%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,14px)}}
+
+/* ---------- marquee ---------- */
+.marquee{background:var(--amber);color:var(--night);overflow:hidden;padding:18px 0;transform:rotate(-1.5deg) scale(1.03);margin-top:-14px;position:relative;z-index:3}
+.marquee .track{display:flex;gap:40px;width:max-content;animation:marq 30s linear infinite;font-family:Unbounded;font-weight:600;font-size:clamp(18px,2.4vw,28px);text-transform:uppercase;white-space:nowrap}
+.marquee .track span{display:flex;align-items:center;gap:40px}
+.marquee .track span::after{content:"✦";font-size:.7em}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---------- generic section ---------- */
+.sec{padding:clamp(80px,12vw,150px) 0}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;color:var(--aqua);font-weight:700;font-size:13px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px}
+.eyebrow::before{content:"";width:28px;height:2px;background:currentColor}
+.sec h2{font-size:clamp(32px,4.6vw,62px);font-weight:800;max-width:16ch}
+.sec .sub{color:var(--mist);max-width:560px;margin-top:18px;font-size:18px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap;margin-bottom:56px}
+
+.reveal{opacity:0;transform:translateY(46px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+.reveal-scale{opacity:0;transform:scale(.92);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease);transition-delay:var(--d,0s)}
+.reveal-scale.in{opacity:1;transform:none}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.stat{background:var(--night);padding:38px 28px}
+.stat .num{font-family:Unbounded;font-weight:800;font-size:clamp(40px,5vw,64px);color:var(--cream);line-height:1}
+.stat .num small{font-size:.4em;color:var(--amber);margin-left:4px}
+.stat p{color:var(--mist);margin-top:12px;font-size:15px}
+
+/* ---------- routes ---------- */
+.routes{display:grid;grid-template-columns:1.2fr 1fr;gap:24px}
+.card{position:relative;border-radius:var(--radius);padding:38px;overflow:hidden;border:1px solid var(--line);
+  background:linear-gradient(160deg,rgba(31,84,68,.55),rgba(13,34,28,.9));transform-style:preserve-3d;transition:transform .5s var(--ease),border-color .4s}
+.card:hover{border-color:rgba(242,165,65,.45)}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(242,165,65,.14),transparent 45%);opacity:0;transition:opacity .4s}
+.card:hover::after{opacity:1}
+.card .badge{position:absolute;top:28px;right:28px;background:var(--amber);color:var(--night);font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(242,165,65,.6)}50%{box-shadow:0 0 0 10px rgba(242,165,65,0)}}
+.card h3{font-size:clamp(26px,3vw,40px);font-weight:800;margin:18px 0 14px}
+.card p{color:var(--mist)}
+.card ul{list-style:none;margin:26px 0 32px;display:grid;gap:12px}
+.card li{display:flex;gap:12px;align-items:flex-start}
+.card li::before{content:"";flex:none;width:20px;height:20px;margin-top:3px;border-radius:50%;background:var(--aqua) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3 3 7-7' fill='none' stroke='%2308140f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.card .ico{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:rgba(86,212,195,.12);color:var(--aqua)}
+.card .ico svg{width:34px;height:34px}
+.card.big{grid-row:span 2;min-height:560px;display:flex;flex-direction:column;justify-content:flex-end}
+.card.big .art{position:absolute;inset:0;z-index:-1;opacity:.9}
+.card.big .art svg{width:100%;height:100%}
+.card.big{isolation:isolate}
+.card.big::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(8,20,15,.95) 35%,rgba(8,20,15,.2))}
+
+/* ---------- rivers ---------- */
+.rivers{display:grid;grid-template-columns:1fr 1.1fr;gap:60px;align-items:center}
+.river-map{position:relative;aspect-ratio:1/1.05;border-radius:var(--radius);border:1px solid var(--line);
+  background:radial-gradient(circle at 30% 20%,rgba(86,212,195,.12),transparent 50%),linear-gradient(160deg,#10302a,#0a1b16);overflow:hidden}
+.river-map svg{width:100%;height:100%}
+.river-map .lbl{font:700 13px Manrope;fill:var(--cream);letter-spacing:.06em}
+.river-map .pin{transform-box:fill-box;transform-origin:center;animation:pin 2s ease-in-out infinite}
+@keyframes pin{50%{transform:scale(1.35)}}
+.river-tabs{display:flex;gap:8px;padding:6px;border-radius:999px;background:rgba(244,236,216,.06);border:1px solid var(--line);width:max-content;margin:34px 0 28px}
+.river-tabs button{border:0;background:none;color:var(--mist);font:700 15px Manrope;padding:12px 22px;border-radius:999px;cursor:pointer;transition:color .3s,background .4s var(--ease)}
+.river-tabs button.on{background:var(--cream);color:var(--night)}
+.river-panel{display:none;animation:fu .7s var(--ease)}
+.river-panel.on{display:block}
+.river-panel h3{font-size:30px;margin-bottom:14px}
+.river-panel p{color:var(--mist)}
+.meter{margin-top:24px;display:grid;gap:14px}
+.meter div{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:16px;font-size:14px;color:var(--mist)}
+.meter span{height:8px;border-radius:8px;background:rgba(244,236,216,.08);overflow:hidden;position:relative}
+.meter span::after{content:"";position:absolute;inset:0;width:var(--v);background:linear-gradient(90deg,var(--water),var(--aqua));border-radius:inherit;transform-origin:left;animation:grow 1.2s var(--ease)}
+@keyframes grow{from{transform:scaleX(0)}}
+
+/* ---------- gear ---------- */
+.gear{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.gear .card{padding:34px;min-height:340px;display:flex;flex-direction:column}
+.gear .card .illu{height:130px;margin:-6px -6px 22px;display:grid;place-items:center}
+.gear .card .illu svg{height:100%;width:auto;transition:transform .7s var(--ease)}
+.gear .card:hover .illu svg{transform:translateY(-8px) rotate(-4deg) scale(1.05)}
+.gear .card h3{font-size:26px;margin:0 0 10px}
+
+/* ---------- camp ---------- */
+.camp{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.amen{padding:28px 24px;border-radius:18px;border:1px solid var(--line);background:rgba(244,236,216,.03);transition:background .4s,transform .5s var(--ease)}
+.amen:hover{background:rgba(242,165,65,.08);transform:translateY(-6px)}
+.amen svg{width:40px;height:40px;color:var(--amber);margin-bottom:18px;transition:transform .5s var(--ease)}
+.amen:hover svg{transform:scale(1.15) rotate(-6deg)}
+.amen h4{font:700 18px Manrope;margin-bottom:4px}
+.amen p{font-size:14px;color:var(--mist)}
+.amen.wide{grid-column:span 2;background:linear-gradient(120deg,rgba(224,102,47,.25),rgba(242,165,65,.08));border-color:rgba(242,165,65,.3);position:relative;overflow:hidden}
+.amen.wide .steam{position:absolute;right:30px;bottom:20px;display:flex;gap:10px}
+.amen.wide .steam i{width:10px;height:50px;border-radius:10px;background:linear-gradient(0deg,rgba(244,236,216,.35),transparent);animation:steam 3s ease-in-out infinite;filter:blur(3px)}
+.amen.wide .steam i:nth-child(2){animation-delay:.6s}
+.amen.wide .steam i:nth-child(3){animation-delay:1.2s}
+@keyframes steam{0%{transform:translateY(20px) scaleY(.6);opacity:0}40%{opacity:1}100%{transform:translateY(-30px) scaleY(1.3);opacity:0}}
+.amen .note{display:inline-block;margin-top:12px;font-size:12px;font-weight:700;color:var(--amber);letter-spacing:.06em;text-transform:uppercase}
+
+/* ---------- steps ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;counter-reset:s}
+.steps::before{content:"";position:absolute;top:30px;left:30px;right:30px;height:2px;background:var(--line)}
+.steps .line{position:absolute;top:30px;left:30px;height:2px;width:calc(100% - 60px);background:linear-gradient(90deg,var(--aqua),var(--amber));transform-origin:left;transform:scaleX(0);transition:transform 1.8s var(--ease)}
+.steps.in .line{transform:scaleX(1)}
+.step{position:relative;counter-increment:s}
+.step .dot{width:60px;height:60px;border-radius:50%;display:grid;place-items:center;background:var(--night);border:2px solid var(--moss);font-family:Unbounded;font-weight:800;margin-bottom:24px;position:relative;z-index:1;transition:border-color .5s,background .5s}
+.step .dot::before{content:counter(s,decimal-leading-zero)}
+.steps.in .step .dot{border-color:var(--amber);background:#1a2a1e;transition-delay:var(--d)}
+.step h4{font:700 20px Manrope;margin-bottom:8px}
+.step p{color:var(--mist);font-size:15px}
+
+/* ---------- history ---------- */
+.history{border-radius:32px;padding:clamp(40px,6vw,80px);overflow:hidden;position:relative;border:1px solid var(--line);
+  background:linear-gradient(135deg,#1b2e22,#0d1a14)}
+.history .rune{position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:Unbounded;font-weight:800;font-size:clamp(180px,26vw,380px);color:rgba(244,236,216,.04);line-height:1;user-select:none;white-space:nowrap}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:50px;position:relative}
+.fact{padding-top:22px;border-top:1px solid var(--line)}
+.fact b{display:block;font-family:Unbounded;font-size:22px;color:var(--amber);margin-bottom:8px}
+.fact p{color:var(--mist);font-size:15px}
+
+/* ---------- booking ---------- */
+.book{display:grid;grid-template-columns:1fr 1.15fr;gap:50px;align-items:start}
+.contacts{display:grid;gap:14px;margin-top:36px}
+.contact{display:flex;align-items:center;gap:16px;padding:18px 22px;border-radius:18px;border:1px solid var(--line);background:rgba(244,236,216,.03);transition:transform .4s var(--ease),border-color .3s,background .3s}
+.contact:hover{transform:translateX(8px);border-color:rgba(86,212,195,.5);background:rgba(86,212,195,.06)}
+.contact .ci{width:46px;height:46px;flex:none;border-radius:14px;display:grid;place-items:center;background:rgba(86,212,195,.12);color:var(--aqua)}
+.contact .ci svg{width:22px;height:22px}
+.contact small{display:block;color:var(--mist);font-size:13px}
+.contact strong{font-size:17px}
+form{padding:clamp(28px,4vw,44px);border-radius:28px;background:linear-gradient(160deg,rgba(31,84,68,.5),rgba(13,34,28,.85));border:1px solid var(--line);position:relative;overflow:hidden}
+form h3{font-size:28px;margin-bottom:8px}
+form>p{color:var(--mist);margin-bottom:28px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{position:relative}
+.field.full{grid-column:1/-1}
+.field input,.field select,.field textarea{width:100%;padding:24px 18px 10px;border-radius:14px;border:1px solid var(--line);background:rgba(8,20,15,.6);color:var(--cream);font:500 16px Manrope;outline:none;transition:border-color .3s,box-shadow .3s;appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%23f4ecd8' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;background-size:18px}
+.field select option{background:var(--deep)}
+.field textarea{min-height:100px;resize:vertical}
+.field label{position:absolute;left:19px;top:17px;color:var(--mist);pointer-events:none;transition:transform .3s var(--ease),font-size .3s,color .3s;transform-origin:left}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--aqua);box-shadow:0 0 0 4px rgba(86,212,195,.12)}
+.field input:focus+label,.field input:not(:placeholder-shown)+label,.field textarea:focus+label,.field textarea:not(:placeholder-shown)+label,.field select+label{transform:translateY(-10px);font-size:12px;color:var(--aqua)}
+.field input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.6}
+.field.err input{border-color:var(--ember)}
+.send{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.send .btn{flex:1;justify-content:center}
+.send .btn.tg{--bg:var(--aqua)}
+.ok{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:40px;background:var(--deep);opacity:0;pointer-events:none;transition:opacity .5s}
+.ok.show{opacity:1;pointer-events:auto}
+.ok svg{width:90px;height:90px;margin:0 auto 20px}
+.ok circle,.ok path{stroke-dasharray:300;stroke-dashoffset:300}
+.ok.show circle{animation:draw 1s var(--ease) forwards}
+.ok.show path{animation:draw .6s .6s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:60px 0 40px;margin-top:40px}
+.foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
+.big-word{font-family:Unbounded;font-weight:800;font-size:clamp(60px,15vw,220px);line-height:.9;letter-spacing:-.04em;margin-bottom:40px;
+  background:linear-gradient(180deg,rgba(244,236,216,.16),rgba(244,236,216,0));-webkit-background-clip:text;background-clip:text;color:transparent}
+.socials{display:flex;gap:10px}
+.socials a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);transition:background .3s,color .3s,transform .4s var(--ease)}
+.socials a:hover{background:var(--amber);color:var(--night);transform:translateY(-4px)}
+.socials svg{width:20px;height:20px}
+.copy{color:var(--mist);font-size:14px}
+
+/* ---------- float CTA ---------- */
+.fab{position:fixed;right:20px;bottom:20px;z-index:40;width:62px;height:62px;border-radius:50%;background:#25d366;display:grid;place-items:center;color:#fff;
+  box-shadow:0 10px 30px -6px rgba(37,211,102,.6);transform:scale(0);transition:transform .5s var(--ease)}
+.fab.show{transform:scale(1)}
+.fab::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #25d366;animation:ring 2s infinite}
+@keyframes ring{to{transform:scale(1.6);opacity:0}}
+.fab svg{width:30px;height:30px}
+
+/* ---------- responsive ---------- */
+@media (max-width:980px){
+  .menu{position:fixed;inset:76px 0 auto;flex-direction:column;gap:0;background:rgba(8,20,15,.96);backdrop-filter:blur(14px);padding:10px 16px 24px;
+    transform:translateY(-120%);transition:transform .5s var(--ease);border-bottom:1px solid var(--line)}
+  .menu a{padding:16px 4px;border-bottom:1px solid var(--line);font-size:18px}
+  .menu.open{transform:none}
+  .burger{display:block}
+  .nav .btn.small{display:none}
+  .nav.open .burger i:nth-child(1){transform:translateY(6px) rotate(45deg)}
+  .nav.open .burger i:nth-child(2){opacity:0}
+  .nav.open .burger i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+  .stats{grid-template-columns:1fr 1fr}
+  .routes,.rivers,.book{grid-template-columns:1fr}
+  .card.big{grid-row:auto;min-height:480px}
+  .gear{grid-template-columns:1fr}
+  .camp{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr;row-gap:40px}
+  .steps::before,.steps .line{display:none}
+  .facts{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .fields{grid-template-columns:1fr}
+  .camp{grid-template-columns:1fr}
+  .amen.wide{grid-column:auto}
+  .steps{grid-template-columns:1fr}
+  .stat{padding:28px 20px}
+  .card{padding:28px}
+  .meter div{grid-template-columns:110px 1fr}
+  .river-tabs button{padding:10px 16px}
+  .sun{width:160px;height:160px;left:55%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .ship{animation:none;left:14%}
+}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="glow" id="glow"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="logo" aria-label="Drakkar.by">
+      <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#f2a541" stroke-width="1.5"/><path d="M8 24c4 5 20 5 24 0" stroke="#f4ecd8" stroke-width="2" stroke-linecap="round"/><path d="M32 24c2-3 2-7 0-9" stroke="#f4ecd8" stroke-width="2" stroke-linecap="round"/><path d="M20 9v15M14 12h12l-1 9H15z" stroke="#f2a541" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      <b>DRAKKAR<span>.by</span></b>
+    </a>
+    <nav class="menu" id="menu">
+      <a href="#routes">Маршруты</a>
+      <a href="#rivers">Реки</a>
+      <a href="#gear">Прокат</a>
+      <a href="#camp">Кемпинг</a>
+      <a href="#book">Контакты</a>
+    </nav>
+    <a href="#book" class="btn small">Оставить заявку</a>
+    <button class="burger" id="burger" aria-label="Меню"><i></i><i></i><i></i></button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="scene" aria-hidden="true">
+    <canvas class="stars" id="stars"></canvas>
+    <div class="sun" data-depth="0.02"></div>
+    <div class="forest" data-depth="0.04" style="bottom:22%;opacity:.45"><svg id="f1" viewBox="0 0 1600 220" preserveAspectRatio="none"></svg></div>
+    <div class="forest" data-depth="0.08" style="bottom:17%;opacity:.75"><svg id="f2" viewBox="0 0 1600 220" preserveAspectRatio="none"></svg></div>
+    <div class="forest" data-depth="0.14"><svg id="f3" viewBox="0 0 1600 220" preserveAspectRatio="none"></svg></div>
+    <div class="waves">
+      <div class="wave w1"><svg viewBox="0 0 1600 60" preserveAspectRatio="none"><path fill="#2a8f86" d="M0 30 Q100 0 200 30 T400 30 T600 30 T800 30 T1000 30 T1200 30 T1400 30 T1600 30 V60 H0Z"/></svg></div>
+      <div class="wave w2"><svg viewBox="0 0 1600 60" preserveAspectRatio="none"><path fill="#1f6d66" d="M0 30 Q50 10 100 30 T200 30 T300 30 T400 30 T500 30 T600 30 T700 30 T800 30 T900 30 T1000 30 T1100 30 T1200 30 T1300 30 T1400 30 T1500 30 T1600 30 V60 H0Z"/></svg></div>
+    </div>
+    <div class="ship" id="ship">
+      <svg viewBox="0 0 300 190">
+        <defs>
+          <clipPath id="sailclip"><path d="M98 32 Q150 20 202 32 L196 104 Q150 114 104 104Z"/></clipPath>
+        </defs>
+        <rect x="148" y="12" width="4" height="118" fill="#3a2a1c"/>
+        <g clip-path="url(#sailclip)">
+          <rect x="90" y="10" width="120" height="110" fill="#f4ecd8"/>
+          <rect x="104" y="10" width="16" height="110" fill="#c4452f"/>
+          <rect x="136" y="10" width="16" height="110" fill="#c4452f"/>
+          <rect x="168" y="10" width="16" height="110" fill="#c4452f"/>
+        </g>
+        <path d="M98 32 Q150 20 202 32" stroke="#3a2a1c" stroke-width="3" fill="none"/>
+        <g stroke="#2a1d12" stroke-width="3" stroke-linecap="round">
+          <line x1="80" y1="140" x2="58" y2="176"/><line x1="110" y1="144" x2="92" y2="180"/>
+          <line x1="140" y1="146" x2="126" y2="182"/><line x1="170" y1="146" x2="162" y2="182"/>
+          <line x1="200" y1="144" x2="198" y2="180"/><line x1="228" y1="140" x2="232" y2="176"/>
+        </g>
+        <path d="M34 118 C80 152 220 152 266 118 L258 136 C210 166 92 166 42 136Z" fill="#5a3b22"/>
+        <path d="M40 126 C90 156 210 156 260 126" stroke="#8a5a2f" stroke-width="2" fill="none"/>
+        <path d="M262 122 C284 100 290 66 274 46 C268 38 256 40 258 50 C262 56 266 54 268 60 C276 80 262 102 250 116Z" fill="#5a3b22"/>
+        <path d="M258 50 l-10 -4 l8 9z" fill="#5a3b22"/><circle cx="266" cy="50" r="2" fill="#f2a541"/>
+        <path d="M38 122 C16 102 12 76 28 62 C34 56 42 62 36 70 C28 82 32 102 50 116Z" fill="#5a3b22"/>
+        <g>
+          <circle cx="76" cy="132" r="9" fill="#c4452f" stroke="#f2a541" stroke-width="2"/><circle cx="100" cy="137" r="9" fill="#f4ecd8" stroke="#f2a541" stroke-width="2"/>
+          <circle cx="124" cy="140" r="9" fill="#2a8f86" stroke="#f2a541" stroke-width="2"/><circle cx="150" cy="141" r="9" fill="#c4452f" stroke="#f2a541" stroke-width="2"/>
+          <circle cx="176" cy="140" r="9" fill="#f4ecd8" stroke="#f2a541" stroke-width="2"/><circle cx="200" cy="137" r="9" fill="#2a8f86" stroke="#f2a541" stroke-width="2"/>
+          <circle cx="224" cy="132" r="9" fill="#c4452f" stroke="#f2a541" stroke-width="2"/>
+        </g>
+      </svg>
+    </div>
+    <div class="waves" style="background:none;height:10%"><div class="wave w3"><svg viewBox="0 0 1600 60" preserveAspectRatio="none"><path fill="#0d221c" d="M0 30 Q100 5 200 30 T400 30 T600 30 T800 30 T1000 30 T1200 30 T1400 30 T1600 30 V60 H0Z"/></svg></div></div>
+    <canvas id="fireflies"></canvas>
+  </div>
+
+  <div class="wrap hero-inner">
+    <span class="tag fade-up" style="animation-delay:.2s"><b>Новинка</b> 2 реки за 1 день</span>
+    <h1 class="split" id="heroTitle" data-text="Погрузись в природу|вместе с *Drakkar*"></h1>
+    <p class="lead fade-up" style="animation-delay:1.1s">Сплавы на байдарках и сапбордах по Нарочанке и Спяглице. Прокат снаряжения, кемпинг и походная баня на берегу — в 110 км от Минска.</p>
+    <div class="ctas fade-up" style="animation-delay:1.3s">
+      <a href="#book" class="btn magnetic">Забронировать сплав <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a href="#routes" class="btn ghost magnetic">Выбрать маршрут</a>
+    </div>
+  </div>
+  <a href="#stats" class="scroll-hint"><i></i>Листай</a>
+</section>
+
+<div class="marquee" aria-hidden="true"><div class="track" id="marq"></div></div>
+
+<!-- ============ STATS ============ -->
+<section class="sec" id="stats" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="stats reveal">
+      <div class="stat"><div class="num"><span data-count="110">0</span><small>км</small></div><p>от Минска, Вилейский район</p></div>
+      <div class="stat"><div class="num"><span data-count="2">0</span><small>реки</small></div><p>Нарочанка и Спяглица за одну поездку</p></div>
+      <div class="stat"><div class="num"><span data-count="1">0</span>–<span data-count="2">0</span><small>дня</small></div><p>короткий сплав или с ночёвкой</p></div>
+      <div class="stat"><div class="num"><span data-count="500">0</span><small>м</small></div><p>против течения — заход в Спяглицу</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROUTES ============ -->
+<section class="sec" id="routes">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow reveal">Маршруты</div>
+        <h2 class="reveal" style="--d:.1s">Выбери свой формат приключения</h2>
+      </div>
+      <p class="sub reveal" style="--d:.2s">Два разных типа рек за одну поездку: спокойная Нарочанка с зелёными тоннелями и узкая, извилистая Спяглица.</p>
+    </div>
+
+    <div class="routes">
+      <article class="card big tilt reveal-scale">
+        <div class="art" aria-hidden="true">
+          <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+            <defs><linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b4a3d"/><stop offset="1" stop-color="#0b1b16"/></linearGradient></defs>
+            <rect width="600" height="600" fill="url(#rg)"/>
+            <g fill="#0f2c24" opacity=".9">
+              <path d="M0 260 L40 140 L80 260Z M50 270 L100 110 L150 270Z M130 260 L170 150 L210 260Z M400 260 L450 120 L500 260Z M480 270 L530 90 L580 270Z M540 260 L580 160 L620 260Z"/>
+            </g>
+            <path class="flow" d="M-20 420 C120 340 220 470 330 400 S520 330 640 380" stroke="#56d4c3" stroke-width="40" fill="none" opacity=".25"/>
+            <path class="flow" d="M-20 420 C120 340 220 470 330 400 S520 330 640 380" stroke="#56d4c3" stroke-width="3" fill="none" stroke-dasharray="10 16"><animate attributeName="stroke-dashoffset" from="0" to="-260" dur="6s" repeatCount="indefinite"/></path>
+            <circle cx="260" cy="200" r="70" fill="#f2a541" opacity=".18"><animate attributeName="r" values="60;80;60" dur="6s" repeatCount="indefinite"/></circle>
+          </svg>
+        </div>
+        <span class="badge">Новинка сезона</span>
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 16c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0"/><path d="M2 20c2 1.5 4 1.5 6 0s4-1.5 6 0 4 1.5 6 0"/><circle cx="12" cy="7" r="3"/></svg></div>
+        <h3>2 реки за 1 день</h3>
+        <p>Нарочанка и Спяглица в одном маршруте. Максимум разнообразия за световой день — идеально для первого знакомства со сплавами.</p>
+        <ul>
+          <li>Байдарки или сапборды на выбор</li>
+          <li>Лесные «зелёные тоннели» и заболоченные участки</li>
+          <li>Динамичная и извилистая Спяглица</li>
+        </ul>
+        <div><a href="#book" class="btn magnetic" data-route="2 реки за 1 день">Хочу этот маршрут <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </article>
+
+      <article class="card tilt reveal-scale" style="--d:.15s">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 20L12 4l9 16z"/><path d="M12 4v16M9 20l3-5 3 5"/></svg></div>
+        <h3>2 реки за 2 дня</h3>
+        <p>Максимум впечатлений, минимум забот. Неспешный сплав с ночёвкой на финише у костра.</p>
+        <ul>
+          <li>Ночёвка в кемпинг-зоне</li>
+          <li>Походная баня на берегу реки</li>
+          <li>Мангал, летняя кухня, душ</li>
+        </ul>
+        <a href="#book" class="btn ghost" data-route="2 реки за 2 дня">Забронировать</a>
+      </article>
+
+      <article class="card tilt reveal-scale" style="--d:.3s">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 14c4 3 16 3 20 0l-2 3c-4 2-12 2-16 0z"/><path d="M6 8l12 12M18 8L6 20"/></svg></div>
+        <h3>Аренда снаряжения</h3>
+        <p>Хотите свой маршрут? Берите байдарки, сапборды и палатки в прокат на 1 или 2 дня.</p>
+        <ul>
+          <li>Аренда на 1 день</li>
+          <li>Аренда на 2 дня</li>
+        </ul>
+        <a href="#gear" class="btn ghost">Смотреть прокат</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RIVERS ============ -->
+<section class="sec" id="rivers" style="background:linear-gradient(180deg,var(--night),var(--deep) 30%,var(--deep) 70%,var(--night))">
+  <div class="wrap rivers">
+    <div class="river-map reveal-scale" id="riverMap">
+      <svg viewBox="0 0 500 520">
+        <defs>
+          <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" fill="none" stroke="rgba(244,236,216,.05)"/></pattern>
+        </defs>
+        <rect width="500" height="520" fill="url(#grid)"/>
+        <ellipse cx="90" cy="80" rx="70" ry="44" fill="#2a8f86" opacity=".35"/>
+        <text x="50" y="84" class="lbl" opacity=".7">оз. Нарочь</text>
+        <path id="r1" d="M140 100 C200 140 160 200 230 230 S330 250 320 310" stroke="#56d4c3" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path id="r2" d="M470 120 C420 160 460 200 410 230 C360 260 420 290 370 300 C340 306 340 300 320 310" stroke="#f2a541" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path id="r3" d="M320 310 C300 380 360 420 300 500" stroke="#56d4c3" stroke-width="9" fill="none" stroke-linecap="round" opacity=".7"/>
+        <g class="map-pins" opacity="0">
+          <circle class="pin" cx="140" cy="100" r="8" fill="#f4ecd8"/><text x="160" y="104" class="lbl">Старт</text>
+          <circle class="pin" cx="320" cy="310" r="9" fill="#f2a541"/><text x="206" y="335" class="lbl">Слияние · 500 м ↑</text>
+          <circle class="pin" cx="300" cy="500" r="8" fill="#f4ecd8"/><text x="320" y="498" class="lbl">Финиш</text>
+          <text x="186" y="186" class="lbl" fill="#56d4c3" style="fill:#56d4c3">Нарочанка</text>
+          <text x="380" y="180" class="lbl" style="fill:#f2a541">Спяглица</text>
+        </g>
+      </svg>
+    </div>
+
+    <div>
+      <div class="eyebrow reveal">Две реки</div>
+      <h2 class="reveal" style="--d:.1s">Две реки — два характера</h2>
+      <div class="river-tabs reveal" style="--d:.2s" role="tablist">
+        <button class="on" data-tab="n" role="tab">Нарочанка</button>
+        <button data-tab="s" role="tab">Спяглица</button>
+      </div>
+      <div class="river-panel on" data-panel="n">
+        <h3>Нарочанка</h3>
+        <p>Вытекает из озера Нарочь. Маршрут идёт через заболоченные участки и лесные «зелёные тоннели», где кроны деревьев смыкаются над водой.</p>
+        <div class="meter">
+          <div>Спокойствие<span style="--v:85%"></span></div>
+          <div>Ширина русла<span style="--v:70%"></span></div>
+          <div>Динамика<span style="--v:40%"></span></div>
+        </div>
+      </div>
+      <div class="river-panel" data-panel="s">
+        <h3>Спяглица</h3>
+        <p>Узкая, извилистая и динамичная. В конце первого дня нужно пройти около 500 метров против течения, чтобы зайти в Спяглицу.</p>
+        <div class="meter">
+          <div>Спокойствие<span style="--v:45%"></span></div>
+          <div>Ширина русла<span style="--v:35%"></span></div>
+          <div>Динамика<span style="--v:90%"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GEAR ============ -->
+<section class="sec" id="gear">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow reveal">Прокат</div>
+        <h2 class="reveal" style="--d:.1s">Всё для сплава — у нас</h2>
+      </div>
+      <p class="sub reveal" style="--d:.2s">Аренда на 1 или 2 дня. Стоимость зависит от формата и количества участников — уточняйте при бронировании.</p>
+    </div>
+    <div class="gear">
+      <article class="card tilt reveal" style="--d:0s">
+        <div class="illu"><svg viewBox="0 0 200 120"><path d="M10 70 C60 95 140 95 190 70 C150 82 50 82 10 70Z" fill="#f2a541"/><path d="M10 70 C60 58 140 58 190 70" stroke="#c97d22" stroke-width="3" fill="none"/><ellipse cx="80" cy="70" rx="14" ry="5" fill="#08140f"/><ellipse cx="125" cy="70" rx="14" ry="5" fill="#08140f"/><g stroke="#f4ecd8" stroke-width="4" stroke-linecap="round"><line x1="40" y1="30" x2="160" y2="105"/></g><ellipse cx="36" cy="27" rx="10" ry="5" fill="#56d4c3" transform="rotate(32 36 27)"/><ellipse cx="164" cy="108" rx="10" ry="5" fill="#56d4c3" transform="rotate(32 164 108)"/></svg></div>
+        <h3>Байдарки</h3>
+        <p>Устойчивые и вместительные — для пар, семей и компаний друзей.</p>
+      </article>
+      <article class="card tilt reveal" style="--d:.12s">
+        <div class="illu"><svg viewBox="0 0 200 120"><path d="M20 80 C20 66 180 66 186 78 C180 90 20 94 20 80Z" fill="#56d4c3"/><path d="M40 80 H160" stroke="#08140f" stroke-width="2" stroke-dasharray="6 6"/><line x1="120" y1="12" x2="96" y2="96" stroke="#f4ecd8" stroke-width="4" stroke-linecap="round"/><path d="M92 92 l-4 18 l12 -14z" fill="#f2a541"/><circle cx="100" cy="30" r="8" fill="#f2a541"/><path d="M100 40 L100 70 M100 48 L118 30 M100 70 L90 80 M100 70 L112 80" stroke="#f2a541" stroke-width="5" stroke-linecap="round"/></svg></div>
+        <h3>Сапборды</h3>
+        <p>Для тех, кто хочет стоять над водой и смотреть на реку по-новому.</p>
+      </article>
+      <article class="card tilt reveal" style="--d:.24s">
+        <div class="illu"><svg viewBox="0 0 200 120"><path d="M30 100 L100 22 L170 100Z" fill="#c4452f"/><path d="M100 22 L130 100 H70Z" fill="#8a2e1f"/><path d="M100 50 L114 100 H86Z" fill="#08140f"/><line x1="10" y1="100" x2="190" y2="100" stroke="#f4ecd8" stroke-width="3" stroke-linecap="round"/><g fill="#f2a541"><circle cx="40" cy="30" r="2"/><circle cx="160" cy="20" r="2.5"/><circle cx="175" cy="50" r="1.6"/></g></svg></div>
+        <h3>Палатки</h3>
+        <p>Для ночёвки в формате «2 реки за 2 дня» или вашего собственного похода.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAMP ============ -->
+<section class="sec" id="camp" style="padding-top:0">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <div class="eyebrow reveal">Кемпинг на финише</div>
+        <h2 class="reveal" style="--d:.1s">Отдых после сплава</h2>
+      </div>
+      <p class="sub reveal" style="--d:.2s">Дополнительные услуги за отдельную плату — чтобы вечер у реки был по-настоящему уютным.</p>
+    </div>
+    <div class="camp">
+      <div class="amen wide reveal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9H3z"/><path d="M9 20v-5h6v5"/><path d="M7 2v3M12 1v2M17 2v3"/></svg>
+        <h4>Походная баня на берегу</h4>
+        <p>Жар, пар и прыжок в прохладную реку.</p>
+        <span class="note">Хит сезона</span>
+        <div class="steam" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+      <div class="amen reveal" style="--d:.06s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2 20L12 5l10 15z"/><path d="M12 5v15"/></svg><h4>Кемпинг-зона</h4><p>Просторная поляна для палаток</p></div>
+      <div class="amen reveal" style="--d:.12s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M2 10l10-6 10 6"/><path d="M4 10v10M20 10v10M2 20h20"/></svg><h4>Шатёр</h4><p>Укрытие от солнца и дождя</p></div>
+      <div class="amen reveal" style="--d:.18s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 11h16v3a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6z"/><path d="M9 3c0 2 2 2 2 4M14 3c0 2 2 2 2 4"/></svg><h4>Летняя кухня</h4><p>Готовьте с комфортом</p></div>
+      <div class="amen reveal" style="--d:.24s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9h18l-2 6H5z"/><path d="M7 15l-2 6M17 15l2 6M8 5c0-1 1-1 1-2M12 5c0-1 1-1 1-2M16 5c0-1 1-1 1-2"/></svg><h4>Мангал и барбекю</h4><p>Шашлыки под шум реки</p></div>
+      <div class="amen reveal" style="--d:.3s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 21V6a3 3 0 0 1 6 0"/><path d="M8 9h7l-1 3H9z"/><path d="M10 15v1M13 15v2M11 18v1M14 19v1"/></svg><h4>Душ</h4><p>Освежиться после маршрута</p></div>
+      <div class="amen reveal" style="--d:.36s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><circle cx="12" cy="8" r="1.5"/><path d="M9 21v-6h6v6"/></svg><h4>Туалет</h4><p>Базовый комфорт в лагере</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STEPS ============ -->
+<section class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow reveal">Как всё устроено</div>
+    <h2 class="reveal" style="--d:.1s;margin-bottom:60px">Четыре шага до реки</h2>
+    <div class="steps" id="steps">
+      <div class="line"></div>
+      <div class="step" style="--d:.1s"><div class="dot"></div><h4>Заявка</h4><p>Оставьте заявку на сайте или напишите в WhatsApp / Telegram.</p></div>
+      <div class="step" style="--d:.5s"><div class="dot"></div><h4>Подтверждение</h4><p>Мы уточним дату, формат, количество участников и стоимость.</p></div>
+      <div class="step" style="--d:.9s"><div class="dot"></div><h4>Дорога</h4><p>Приезжайте в Вилейский район — около 110 км от Минска.</p></div>
+      <div class="step" style="--d:1.3s"><div class="dot"></div><h4>Сплав</h4><p>Получаете снаряжение — и вперёд, навстречу двум рекам.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HISTORY ============ -->
+<section class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="history reveal-scale">
+      <div class="rune" aria-hidden="true" data-depth="-0.05">ᚱᚢᚾᛖ</div>
+      <div class="eyebrow">Земля с историей</div>
+      <h2>Здесь жили задолго до нас</h2>
+      <p class="sub">Берега этих рек хранят следы древних людей — сплав превращается в маленькую экспедицию во времени.</p>
+      <div class="facts">
+        <div class="fact reveal" style="--d:.1s"><b>Стоянки</b><p>На берегах найдены стоянки древних людей.</p></div>
+        <div class="fact reveal" style="--d:.2s"><b>Каменные топоры</b><p>Находки, которые здесь доставали из земли.</p></div>
+        <div class="fact reveal" style="--d:.3s"><b>«Папоўцы»</b><p>Геологический памятник природы республиканского значения (с 2007 года).</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOKING ============ -->
+<section class="sec" id="book">
+  <div class="wrap book">
+    <div>
+      <div class="eyebrow reveal">Бронирование</div>
+      <h2 class="reveal" style="--d:.1s">Готовы к реке?</h2>
+      <p class="sub reveal" style="--d:.2s">Заполните форму — заявка уйдёт к нам в мессенджер, и мы быстро подтвердим детали.</p>
+      <div class="contacts">
+        <a class="contact reveal" style="--d:.1s" href="tel:+375295593472"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2"/></svg></span><span><small>Телефон</small><strong>+375 (29) 559-34-72</strong></span></a>
+        <a class="contact reveal" style="--d:.18s" href="https://wa.me/375295593472" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2m5.3 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.1 1.3"/></svg></span><span><small>WhatsApp</small><strong>Написать в WhatsApp</strong></span></a>
+        <a class="contact reveal" style="--d:.26s" href="https://t.me/+375295593472" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13.2l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3"/></svg></span><span><small>Telegram</small><strong>Написать в Telegram</strong></span></a>
+        <a class="contact reveal" style="--d:.34s" href="https://instagram.com/drakkar.bel" target="_blank" rel="noopener"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></span><span><small>Instagram</small><strong>@drakkar.bel</strong></span></a>
+        <a class="contact reveal" style="--d:.42s" href="mailto:zakazfexy@gmail.com"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span><small>Email</small><strong>zakazfexy@gmail.com</strong></span></a>
+      </div>
+    </div>
+
+    <form id="form" class="reveal-scale" novalidate>
+      <h3>Оставить заявку</h3>
+      <p>Ответим в течение дня.</p>
+      <div class="fields">
+        <div class="field"><input id="fName" placeholder=" " required><label for="fName">Ваше имя</label></div>
+        <div class="field"><input id="fPhone" type="tel" placeholder=" " required><label for="fPhone">Телефон</label></div>
+        <div class="field"><input id="fDate" type="date" placeholder=" "><label for="fDate">Дата</label></div>
+        <div class="field"><input id="fPeople" type="number" min="1" placeholder=" "><label for="fPeople">Сколько человек</label></div>
+        <div class="field full"><select id="fRoute">
+          <option>2 реки за 1 день</option>
+          <option>2 реки за 2 дня</option>
+          <option>Аренда на 1 день</option>
+          <option>Аренда на 2 дня</option>
+        </select><label for="fRoute">Формат</label></div>
+        <div class="field full"><textarea id="fMsg" placeholder=" "></textarea><label for="fMsg">Пожелания: байдарки / сапы, баня, палатки…</label></div>
+      </div>
+      <div class="send">
+        <button class="btn" type="submit" data-via="wa">Отправить в WhatsApp</button>
+        <button class="btn tg" type="submit" data-via="tg">В Telegram</button>
+      </div>
+      <div class="ok" id="ok">
+        <div>
+          <svg viewBox="0 0 100 100" fill="none" stroke="#56d4c3" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><circle cx="50" cy="50" r="44"/><path d="M30 52l14 14 26-30"/></svg>
+          <h3>Почти готово!</h3>
+          <p style="color:var(--mist);margin:10px 0 24px">Мы открыли мессенджер с текстом заявки — осталось нажать «Отправить».</p>
+          <button type="button" class="btn ghost small" id="again">Новая заявка</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="big-word">DRAKKAR</div>
+    <div class="foot">
+      <a href="#top" class="logo"><b>DRAKKAR<span>.by</span></b></a>
+      <div class="socials">
+        <a href="https://instagram.com/drakkar.bel" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></a>
+        <a href="https://t.me/+375295593472" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.5 13.2l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3"/></svg></a>
+        <a href="https://wa.me/375295593472" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21l1.5-4.5A9 9 0 1 1 8 20z"/></svg></a>
+      </div>
+      <p class="copy">© <span id="year"></span> Drakkar.by · Сплавы по Нарочанке и Спяглице</p>
+    </div>
+  </div>
+</footer>
+
+<a class="fab" id="fab" href="https://wa.me/375295593472" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2m5.3 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.1 1.3"/></svg></a>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  $('#year').textContent = new Date().getFullYear();
+
+  /* ---- hero title split ---- */
+  const title = $('#heroTitle');
+  let i = 0;
+  title.innerHTML = title.dataset.text.split('|').map(line =>
+    line.split(' ').map(word => {
+      const acc = word.startsWith('*');
+      const clean = word.replace(/\*/g, '');
+      const chars = [...clean].map(c => `<span class="ch" style="animation-delay:${0.35 + (i++) * 0.03}s">${c}</span>`).join('');
+      return `<span class="w${acc ? ' acc' : ''}">${chars}</span>`;
+    }).join(' ')
+  ).join('<br>');
+  // gradient text must be on the chars themselves
+  $$('.w.acc .ch', title).forEach(c => c.classList.add('accent'));
+
+  /* ---- forest layers ---- */
+  function forest(svg, count, minH, maxH, color, seed) {
+    let s = seed;
+    const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    let d = '';
+    for (let k = 0; k < count; k++) {
+      const x = (k / count) * 1600 + rnd() * 30 - 15;
+      const h = minH + rnd() * (maxH - minH);
+      const w = h * (0.28 + rnd() * 0.12);
+      const base = 220;
+      // layered pine: three stacked triangles
+      for (let t = 0; t < 3; t++) {
+        const top = base - h + t * h * 0.22;
+        const ww = w * (0.6 + t * 0.25);
+        d += `M${x} ${top}L${x + ww} ${base - h * (0.45 - t * 0.2)}L${x - ww} ${base - h * (0.45 - t * 0.2)}Z`;
+      }
+      d += `M${x - 3} ${base}V${base - h * 0.3}H${x + 3}V${base}Z`;
+    }
+    svg.innerHTML = `<path d="${d}" fill="${color}"/><rect y="200" width="1600" height="20" fill="${color}"/>`;
+  }
+  forest($('#f1'), 70, 70, 130, '#1c4a40', 7);
+  forest($('#f2'), 55, 90, 170, '#123a31', 21);
+  forest($('#f3'), 42, 120, 210, '#0b2620', 42);
+
+  /* ---- stars ---- */
+  const sc = $('#stars'), sx = sc.getContext('2d');
+  function drawStars() {
+    sc.width = sc.offsetWidth * devicePixelRatio; sc.height = sc.offsetHeight * devicePixelRatio;
+    sx.clearRect(0, 0, sc.width, sc.height);
+    for (let k = 0; k < 140; k++) {
+      const y = Math.random() * sc.height;
+      sx.globalAlpha = Math.random() * (1 - y / sc.height) * 0.8;
+      sx.fillStyle = '#f4ecd8';
+      sx.beginPath(); sx.arc(Math.random() * sc.width, y, Math.random() * 1.3 * devicePixelRatio, 0, 7); sx.fill();
+    }
+  }
+  drawStars();
+
+  /* ---- fireflies ---- */
+  const fc = $('#fireflies'), fx = fc.getContext('2d');
+  let flies = [];
+  function sizeFlies() {
+    fc.width = fc.offsetWidth; fc.height = fc.offsetHeight;
+    flies = Array.from({ length: innerWidth < 600 ? 22 : 45 }, () => ({
+      x: Math.random() * fc.width, y: fc.height * (0.5 + Math.random() * 0.4),
+      r: 1 + Math.random() * 2, a: Math.random() * 6.28, sp: 0.2 + Math.random() * 0.5, ph: Math.random() * 6.28
+    }));
+  }
+  sizeFlies();
+  let heroVisible = true;
+  function tickFlies(t) {
+    if (heroVisible) {
+      fx.clearRect(0, 0, fc.width, fc.height);
+      for (const f of flies) {
+        f.a += (Math.random() - 0.5) * 0.2;
+        f.x += Math.cos(f.a) * f.sp; f.y += Math.sin(f.a) * f.sp * 0.6;
+        if (f.x < 0) f.x = fc.width; if (f.x > fc.width) f.x = 0;
+        if (f.y < fc.height * 0.4 || f.y > fc.height * 0.95) f.a = -f.a;
+        const glow = 0.4 + 0.6 * Math.abs(Math.sin(t / 700 + f.ph));
+        const g = fx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 6);
+        g.addColorStop(0, `rgba(255,214,120,${glow})`); g.addColorStop(1, 'rgba(255,214,120,0)');
+        fx.fillStyle = g; fx.beginPath(); fx.arc(f.x, f.y, f.r * 6, 0, 7); fx.fill();
+      }
+    }
+    if (!reduce) requestAnimationFrame(tickFlies);
+  }
+  requestAnimationFrame(tickFlies);
+  new IntersectionObserver(([e]) => heroVisible = e.isIntersecting).observe($('.hero'));
+  addEventListener('resize', () => { drawStars(); sizeFlies(); });
+
+  /* ---- marquee ---- */
+  const words = ['Байдарки', 'Сапборды', 'Палатки', 'Походная баня', 'Кемпинг', 'Нарочанка', 'Спяглица', 'Мангал'];
+  const half = words.map(w => `<span>${w}</span>`).join('');
+  $('#marq').innerHTML = half + half;
+
+  /* ---- parallax: mouse + scroll ---- */
+  const layers = $$('[data-depth]');
+  let mx = 0, my = 0, sy = 0;
+  addEventListener('pointermove', e => {
+    mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5;
+    $('#glow').style.transform = `translate(${e.clientX - 210}px,${e.clientY - 210}px)`;
+  }, { passive: true });
+
+  const nav = $('#nav'), prog = $('#progress'), fab = $('#fab');
+  function frame() {
+    sy = scrollY;
+    if (!reduce) layers.forEach(l => {
+      const d = parseFloat(l.dataset.depth);
+      if (l.closest('.hero')) l.style.transform = `translate3d(${mx * d * -600}px,${sy * d * 3 + my * d * -200}px,0)`;
+      else {
+        const r = l.parentElement.getBoundingClientRect();
+        l.style.transform = `translate3d(${r.top * d * 3}px,-50%,0)`;
+      }
+    });
+    nav.classList.toggle('scrolled', sy > 40);
+    fab.classList.toggle('show', sy > innerHeight * 0.8);
+    prog.style.transform = `scaleX(${sy / (document.documentElement.scrollHeight - innerHeight)})`;
+    riverScroll();
+    requestAnimationFrame(frame);
+  }
+
+  /* ---- river path draw on scroll ---- */
+  const rpaths = ['#r1', '#r2', '#r3'].map(id => $(id));
+  rpaths.forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.l = L; });
+  const map = $('#riverMap'), pins = $('.map-pins');
+  function riverScroll() {
+    const r = map.getBoundingClientRect();
+    const t = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight * 0.75 + r.height * 0.4)));
+    const seg = [[0, .45], [.25, .7], [.6, 1]];
+    rpaths.forEach((p, k) => {
+      const [a, b] = seg[k], v = Math.min(1, Math.max(0, (t - a) / (b - a)));
+      p.style.strokeDashoffset = p.dataset.l * (1 - (reduce ? 1 : v));
+    });
+    pins.style.opacity = reduce ? 1 : Math.max(0, (t - .7) / .3);
+    pins.style.transition = 'opacity .3s';
+  }
+  requestAnimationFrame(frame);
+
+  /* ---- reveal ---- */
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  $$('.reveal,.reveal-scale,#steps').forEach(el => io.observe(el));
+
+  /* ---- counters ---- */
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, to = +el.dataset.count, t0 = performance.now(), dur = 1600;
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - p, 4);
+      el.textContent = Math.round(to * ease);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    reduce ? el.textContent = to : requestAnimationFrame(step);
+    cio.unobserve(el);
+  }), { threshold: 0.6 });
+  $$('[data-count]').forEach(el => cio.observe(el));
+
+  /* ---- tilt + spotlight ---- */
+  if (matchMedia('(hover:hover)').matches && !reduce) {
+    $$('.tilt').forEach(c => {
+      c.addEventListener('pointermove', e => {
+        const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        c.style.setProperty('--mx', x * 100 + '%'); c.style.setProperty('--my', y * 100 + '%');
+        c.style.transform = `perspective(1000px) rotateX(${(0.5 - y) * 6}deg) rotateY(${(x - 0.5) * 6}deg)`;
+      });
+      c.addEventListener('pointerleave', () => c.style.transform = '');
+    });
+    $$('.magnetic').forEach(b => {
+      b.addEventListener('pointermove', e => {
+        const r = b.getBoundingClientRect();
+        b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px,${(e.clientY - r.top - r.height / 2) * 0.35}px)`;
+      });
+      b.addEventListener('pointerleave', () => b.style.transform = '');
+    });
+  }
+
+  /* ---- river tabs ---- */
+  $$('.river-tabs button').forEach(b => b.addEventListener('click', () => {
+    $$('.river-tabs button').forEach(x => x.classList.toggle('on', x === b));
+    $$('.river-panel').forEach(p => p.classList.toggle('on', p.dataset.panel === b.dataset.tab));
+  }));
+
+  /* ---- mobile menu ---- */
+  $('#burger').addEventListener('click', () => { nav.classList.toggle('open'); $('#menu').classList.toggle('open'); });
+  $$('#menu a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); $('#menu').classList.remove('open'); }));
+
+  /* ---- route preselect ---- */
+  $$('[data-route]').forEach(a => a.addEventListener('click', () => { $('#fRoute').value = a.dataset.route; }));
+
+  /* ---- form ---- */
+  let via = 'wa';
+  $$('.send button').forEach(b => b.addEventListener('click', () => via = b.dataset.via));
+  $('#form').addEventListener('submit', e => {
+    e.preventDefault();
+    const name = $('#fName'), phone = $('#fPhone');
+    let bad = false;
+    [name, phone].forEach(f => {
+      const empty = !f.value.trim() || (f === phone && f.value.replace(/\D/g, '').length < 7);
+      f.parentElement.classList.toggle('err', empty);
+      if (empty) bad = true;
+    });
+    if (bad) { $('#form').animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 350 }); return; }
+    const text = [
+      'Заявка с сайта Drakkar.by',
+      `Имя: ${name.value}`, `Телефон: ${phone.value}`,
+      `Формат: ${$('#fRoute').value}`,
+      $('#fDate').value && `Дата: ${$('#fDate').value}`,
+      $('#fPeople').value && `Человек: ${$('#fPeople').value}`,
+      $('#fMsg').value && `Пожелания: ${$('#fMsg').value}`
+    ].filter(Boolean).join('\n');
+    const url = via === 'tg'
+      ? `https://t.me/+375295593472?text=${encodeURIComponent(text)}`
+      : `https://wa.me/375295593472?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener');
+    $('#ok').classList.add('show');
+  });
+  $('#again').addEventListener('click', () => { $('#form').reset(); $('#ok').classList.remove('show'); });
+})();
+</script>
+</body>
+</html>
