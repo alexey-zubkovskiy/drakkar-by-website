@@ -325,8 +325,7 @@ form>p{color:var(--mist);margin-bottom:28px}
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line);padding:60px 0 110px;margin-top:0}
 .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
-.big-word{font-family:Unbounded;font-weight:800;font-size:clamp(60px,15vw,220px);line-height:.9;letter-spacing:-.04em;margin-bottom:40px;
-  background:linear-gradient(180deg,rgba(244,236,216,.16),rgba(244,236,216,0));-webkit-background-clip:text;background-clip:text;color:transparent}
+.big-word{display:block;width:100%;height:auto;margin-bottom:40px;overflow:visible;font-family:Unbounded,sans-serif;font-weight:800}
 .socials{display:flex;gap:10px}
 .socials a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);transition:background .3s,color .3s,transform .4s var(--ease)}
 .socials a:hover{background:var(--amber);color:var(--night);transform:translateY(-4px)}
@@ -372,6 +371,7 @@ footer{border-top:1px solid var(--line);padding:60px 0 110px;margin-top:0}
 @media (max-width:560px){
   body{font-size:16px}
   .fields{grid-template-columns:1fr}
+  .send{flex-direction:column}
   .camp{grid-template-columns:1fr}
   .amen.wide{grid-column:auto}
   .steps{grid-template-columns:1fr}
@@ -846,7 +846,10 @@ footer{border-top:1px solid var(--line);padding:60px 0 110px;margin-top:0}
 <!-- ============ FOOTER ============ -->
 <footer>
   <div class="wrap">
-    <div class="big-word">DRAKKAR</div>
+    <svg class="big-word" viewBox="0 0 1000 108" aria-hidden="true">
+      <defs><linearGradient id="bwg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4ecd8" stop-opacity=".2"/><stop offset="1" stop-color="#f4ecd8" stop-opacity=".02"/></linearGradient></defs>
+      <text x="0" y="104" font-size="146" textLength="1000" lengthAdjust="spacingAndGlyphs" fill="url(#bwg)">DRAKKAR</text>
+    </svg>
     <div class="foot">
       <a href="#top" class="logo"><b>DRAKKAR<span>.by</span></b></a>
       <div class="socials">
